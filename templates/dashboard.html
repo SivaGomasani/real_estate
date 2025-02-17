@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Platform</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* General styles for the cards and images */
+        .card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            /* Fixed height for images */
+            object-fit: cover;
+            /* Ensures images maintain aspect ratio and cover the area */
+        }
+
+        .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .btn {
+            align-self: flex-start;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">SJ Real Estate</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="" onclick="alert('Login First')">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="" onclick="alert('Login First')">For Buyers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="" id="forTenants" onclick="alert('Login First')">For
+                            Tenants</a></li>
+                    <li class="nav-item"><a class="nav-link" href="" onclick="alert('Login First')">For Dealers</a></li>
+                    <li class="nav-item"><a class="btn btn-primary" href="/login">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1>Find Your Dream Property</h1>
+            <p>Search properties for Buy, Rent, and Investment</p>
+            <div class="search-bar bg-white p-3 rounded shadow-sm">
+                <input type="text" class="form-control" placeholder="Search location...">
+                <button class="btn btn-primary mt-2">Search</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Property Listing -->
+    <section class="container mt-5">
+        <h2 class="text-center mb-4">Explore Properties</h2>
+        <div class="row" id="propertyList"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2025 Real Estate Platform. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const properties = [
+            { title: "Luxury Apartment", price: 500000, bhk: "3 BHK", location: "New York", img: "https://th.bing.com/th/id/OIP.iE7mcw3w2aFFDhXP9A1lggHaE8?w=298&h=199&c=7&r=0&o=5&dpr=1.3&pid=1.7" },
+            { title: "Modern Villa", price: 750000, bhk: "4 BHK", location: "California", img: "https://th.bing.com/th/id/OIP.EmlOIQG_HbQ3dCXuJ3hHKwHaEK?w=279&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" },
+            { title: "Beach House", price: 1200000, bhk: "5 BHK", location: "Miami", img: "https://ts4.mm.bing.net/th?id=OIP.1w-UHrxIvTNXCOxNDWB55wHaE8&pid=15.1" },
+            // Add more property objects as needed to make a total of 30
+            { title: "Penthouse Suite", price: 3000000, bhk: "6 BHK", location: "Dubai", img: "https://th.bing.com/th/id/OIP.tJqZlRTJN4wJYnS_Y0oxugHaEK?w=286&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" },
+            { title: "Country Cottage", price: 400000, bhk: "2 BHK", location: "Kentucky", img: "https://th.bing.com/th/id/OIP.mURBvvX32-o6w70QiT3lOwHaE7?rs=1&pid=ImgDetMain" },
+            { title: "Urban Loft", price: 600000, bhk: "3 BHK", location: "Chicago", img: "https://th.bing.com/th/id/OIP.z9HW-i1TW4aYuiFRmait-wHaE8?w=290&h=193&c=7&r=0&o=5&dpr=1.3&pid=1.7" },
+            { title: "Suburban House", price: 700000, bhk: "4 BHK", location: "Texas", img: "https://th.bing.com/th/id/OIP.AWZl3lFEFkVEC_QVClVVlAHaFW?w=325&h=189&c=7&r=0&o=5&dpr=1.3&pid=1.7" },
+            { title: "Mountain Retreat", price: 950000, bhk: "5 BHK", location: "Colorado", img: "https://th.bing.com/th/id/OIP.ZCW1ZAFU7qFS3mxssnZVMQHaE8?w=334&h=182&c=7&r=0&o=5&dpr=1.3&pid=1.7" },
+            { title: "City Apartment", price: 450000, bhk: "2 BHK", location: "London", img: "https://th.bing.com/th/id/OIP.lP4PuaO32PtZQ6ReihPMhwHaE8?w=373&h=204&c=7&r=0&o=5&dpr=1.3&pid=1.7" },
+            { title: "Farmhouse", price: 850000, bhk: "4 BHK", location: "Tuscany", img: "https://th.bing.com/th?id=OIP.YjNuWtpBD-MhzVPJAQDnFQHaEo&w=316&h=197&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2" },
+            { title: "Lake House", price: 1100000, bhk: "5 BHK", location: "Ontario", img: "https://assets.architecturaldesigns.com/plan_assets/325007246/original/62327DJ_render_08_1613143439.jpg" },
+            { title: "Eco Home", price: 550000, bhk: "3 BHK", location: "Portland", img: "https://th.bing.com/th/id/OIP.-8xyoLWX-rEXAPRUhe6olQHaFU?w=257&h=185&c=7&r=0&o=5&dpr=1.3&pid=1.7" },
+            { title: "Studio Apartment", price: 300000, bhk: "1 BHK", location: "San Francisco", img: "https://www.decoraid.com/wp-content/uploads/2021/04/modern-studio-apartment-scaled.jpeg" },
+            { title: "Mansion", price: 5000000, bhk: "7 BHK", location: "Los Angeles", img: "https://th.bing.com/th/id/OIP.ONo04Lddq86sFwTIYezE0AHaE-?w=333&h=182&c=7&r=0&o=5&dpr=1.3&pid=1.7" },
+            { title: "Townhouse", price: 450000, bhk: "3 BHK", location: "Atlanta", img: "https://i.pinimg.com/originals/be/8a/cf/be8acf4c994eeba3ef05fec44175faed.jpg" },
+            { title: "Duplex", price: 550000, bhk: "3 BHK", location: "Sydney", img: "https://engineeringdiscoveries.com/wp-content/uploads/2019/03/Untitled-1ERRTEEYRYRTRT.jpg" },
+            { title: "Ranch", price: 950000, bhk: "4 BHK", location: "Texas", img: "https://th.bing.com/th/id/OIP.Wjipzn3SllJL0GVXMNqg-QHaDz?rs=1&pid=ImgDetMain" },
+            { title: "Colonial House", price: 1250000, bhk: "6 BHK", location: "Virginia", img: "https://th.bing.com/th/id/OIP.sZgnhFGvn07xZNPY3Py2IwHaE8?rs=1&pid=ImgDetMain" },
+            { title: "Chalet", price: 1400000, bhk: "5 BHK", location: "Switzerland", img: "https://www.homestratosphere.com/wp-content/uploads/2021/04/mountain-chalet-homes-Apr52021-6-1-870x580.jpg" },
+            { title: "Skyline Penthouse", price: 3500000, bhk: "5 BHK", location: "New York", img: "https://th.bing.com/th/id/R.8243232f55a5e95207b4a031003d884d?rik=reZ%2bnbLUB4dKcA&riu=http%3a%2f%2fwww.prusa.com%2fwp-content%2fuploads%2f2020%2f07%2fDRAFT-2-57_9305369_107332_BPO-107332-157-copy-2.jpeg&ehk=EPlA%2bailzl9gmtgGT%2fBgSPvno3yWb1aisoFZdN18BZY%3d&risl=&pid=ImgRaw&r=0" },
+            { title: "Cabin", price: 400000, bhk: "3 BHK", location: "Alaska", img: "https://th.bing.com/th/id/OIP.uXzqgS3D5gAqQWaJ9dFJxwHaE8?w=700&h=467&rs=1&pid=ImgDetMain" },
+            { title: "Bungalow", price: 600000, bhk: "3 BHK", location: "Florida", img: "https://www.thoughtco.com/thmb/om0AyXs0UNSTnWPflyUmRWlEX9k=/2121x1414/filters:fill(auto,1)/GettyImages-523235876-59efa2f5396e5a0010cda6dd.jpg" },
+            { title: "Estate", price: 4000000, bhk: "8 BHK", location: "Hampshire", img: "https://th.bing.com/th/id/OIP.-Gvy_ivutC6CxWugZsptKwHaE8?rs=1&pid=ImgDetMain" },
+            { title: "Loft", price: 500000, bhk: "2 BHK", location: "Berlin", img: "https://th.bing.com/th/id/OIP.b0mSyIvTkmewvLmm1vHTCAHaFj?rs=1&pid=ImgDetMain" },
+        ];
+
+        const propertyList = document.getElementById("propertyList");
+
+        properties.forEach(property => {
+            const card = `
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="${property.img}" class="card-img-top" alt="${property.title}" >
+                                                <div class="card-body">
+                            <h5 class="card-title">${property.title}</h5>
+                            <p class="card-text">$${property.price} - ${property.bhk} - ${property.location}</p>
+                            <a href="#" class="btn btn-primary" onclick="alert('Login First')">View Details</a>
+                        </div>
+                    </div>
+                </div>`;
+            propertyList.innerHTML += card;
+        });
+    </script>
+</body>
+
+</html>

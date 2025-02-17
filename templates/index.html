@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Platform</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General Card Styling */
+        .card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Responsive Grid */
+        @media (max-width: 768px) {
+            .card {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Button Styling */
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 15px 0;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">SJ Real Estate</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/buyers">For Buyers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/tenants">For Tenants</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dealers">For Dealers</a></li>
+                    <li class="nav-item"><a href="/logout"><button class="btn btn-primary">Logout</button></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1>Find Your Dream Property</h1>
+            <p>Search properties for Buy, Rent, and Investment</p>
+            <div class="search-bar bg-white p-3 rounded shadow-sm">
+                <input type="text" class="form-control" placeholder="Search location...">
+                <button class="btn btn-primary mt-2">Search</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Property Listing -->
+    <section class="container mt-5">
+        <h2 class="text-center mb-4">Explore Properties</h2>
+        <div class="row" id="propertyList">
+            <!-- Dynamic Properties Will Be Loaded Here -->
+        </div>
+    </section>
+
+    <!-- Property Post Modal -->
+    <div class="modal fade" id="postPropertyModal" tabindex="-1" aria-labelledby="postPropertyLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="postPropertyLabel">Post a Property</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="propertyForm">
+                        <div class="mb-3">
+                            <label class="form-label">Property Title</label>
+                            <input type="text" class="form-control" id="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Price</label>
+                            <input type="number" class="form-control" id="price" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">BHK</label>
+                            <input type="number" class="form-control" id="bhk" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Post Property</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2025 Real Estate Platform. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("openPostModal").addEventListener("click", function () {
+            var myModal = new bootstrap.Modal(document.getElementById("postPropertyModal"));
+            myModal.show();
+        });
+
+        document.getElementById("propertyForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            let property = {
+                title: document.getElementById("title").value,
+                price: document.getElementById("price").value,
+                bhk: document.getElementById("bhk").value,
+                location: document.getElementById("location").value
+            };
+
+            fetch("/add_property", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(property)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    loadProperties();
+                    var modal = bootstrap.Modal.getInstance(document.getElementById("postPropertyModal"));
+                    modal.hide();
+                });
+        });
+
+        function loadProperties() {
+            fetch("/get_properties")
+                .then(response => response.json())
+                .then(properties => {
+                    let propertyList = document.getElementById("propertyList");
+                    propertyList.innerHTML = "";
+                    properties.forEach(property => {
+                        let card = `<div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${property.title}</h5>
+                                            <p class="card-text">$${property.price} - ${property.bhk} BHK - ${property.location}</p>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        propertyList.innerHTML += card;
+                    });
+                });
+        }
+
+        loadProperties();
+    </script>
+</body>
+
+</html>

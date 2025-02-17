@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Dealers</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General Card Styling */
+        .card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Responsive Grid */
+        @media (max-width: 768px) {
+            .card {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Button Styling */
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 15px 0;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">SJ Real Estate</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/buyers">For Buyers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/tenants">For Tenants</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/dealers">For Dealers</a></li>
+                    <li class="nav-item"><a class="btn btn-primary" href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dealer Section -->
+    <section class="container mt-5">
+        <h2 class="text-center mb-4">Dealer Dashboard</h2>
+        <p class="text-center">Manage your property listings here.</p>
+
+        <!-- Property Upload Form -->
+        <div class="card p-4 shadow-sm">
+            <h4>Add a New Property</h4>
+            <form id="dealerPropertyForm" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label" for="title">Property Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="type">Property Type</label>
+                    <select class="form-control" id="type" name="type" required>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Villa">Villa</option>
+                        <option value="Independent House">Independent House</option>
+                        <option value="Commercial Space">Commercial Space</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="price">Price</label>
+                    <input type="number" class="form-control" id="price" name="price" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="bhk">BHK</label>
+                    <input type="number" class="form-control" id="bhk" name="bhk" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="area">Area (Sq. Ft)</label>
+                    <input type="number" class="form-control" id="area" name="area" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="location">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="contact">Contact Number</label>
+                    <input type="text" class="form-control" id="contact" name="contact" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="image">Property Image</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Post Property</button>
+            </form>
+        </div>
+
+        <!-- Dealer Listings -->
+        <h3 class="mt-5">Your Properties</h3>
+        <div class="row" id="dealerPropertyList">
+            <!-- Properties will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2025 Real Estate Platform. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("dealerPropertyForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            let formData = new FormData();
+            formData.append("title", document.getElementById("title").value);
+            formData.append("type", document.getElementById("type").value);
+            formData.append("price", document.getElementById("price").value);
+            formData.append("bhk", document.getElementById("bhk").value);
+            formData.append("area", document.getElementById("area").value);
+            formData.append("location", document.getElementById("location").value);
+            formData.append("contact", document.getElementById("contact").value);
+            formData.append("description", document.getElementById("description").value);
+            formData.append("image", document.getElementById("image").files[0]);
+
+            fetch("/add_property", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    document.getElementById("dealerPropertyForm").reset();
+                    loadProperties();
+                })
+                .catch(error => console.error("Error:", error));
+        });
+
+        function loadProperties() {
+            fetch("/get_properties")
+                .then(response => response.json())
+                .then(properties => {
+                    let list = document.getElementById("dealerPropertyList");
+                    list.innerHTML = "";
+                    properties.forEach(property => {
+                        let card = `
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <img src="static/uploads/${property.image}" class="card-img-top" alt="Property Image">
+                                <div class="card-body">
+                                    <h5 class="card-title">${property.title}</h5>
+                                    <p class="card-text"><strong>Type:</strong> ${property.property_type}</p>
+                                    <p class="card-text"><strong>Price:</strong> ₹${property.price}</p>
+                                    <p class="card-text"><strong>BHK:</strong> ${property.bhk}</p>
+                                    <p class="card-text"><strong>Location:</strong> ${property.location}</p>
+                                    <p class="card-text"><strong>Contact:</strong> ${property.contact}</p>
+                                    <p class="card-text">${property.description}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                        list.innerHTML += card;
+                    });
+                })
+                .catch(error => console.error("Error fetching properties:", error));
+        }
+
+        loadProperties();
+    </script>
+</body>
+
+</html>
