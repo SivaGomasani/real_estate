@@ -12,8 +12,8 @@ app.secret_key = "your_secret_key"
 # SQLite Database Configuration
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///realestate.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["UPLOAD_FOLDER"] = "static/uploads"
-app.config["RECEIPTS_FOLDER"] = "static/receipts"
+app.config["UPLOAD_FOLDER"] = "/tmp/uploads"
+app.config["RECEIPTS_FOLDER"] = "/tmp/receipts"
 
 # Ensure the necessary folders exist
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
@@ -244,6 +244,7 @@ def buyers():
     properties = Property.query.filter_by(property_type="Sale").all()
     return render_template("buyers.html", properties=properties)
 
+# Dealers Route
 # Dealers Route
 @app.route("/dealers", methods=["GET", "POST"])
 def dealers():
